@@ -1,4 +1,4 @@
-package d2protocol
+package d2protocolbuilder
 
 import "fmt"
 
@@ -12,5 +12,5 @@ func newError(err error, msg string) error {
 }
 
 func (e *protocolError) Error() string {
-	return fmt.Sprintf("d2protocol error: %v (%v)", e.msg, e.err)
+	return fmt.Sprintf("d2protocolbuilder error: %v (%v)", e.msg, e.err)
 }

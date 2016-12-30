@@ -1,4 +1,4 @@
-package d2protocol
+package d2protocolbuilder
 
 // WriteMethodTypesMap maps an as3 write method to a Golang type
 var WriteMethodTypesMap = map[string]string{

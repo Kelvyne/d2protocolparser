@@ -1,4 +1,4 @@
-package d2protocol
+package d2protocolbuilder
 
 import (
 	"os"
