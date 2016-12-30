@@ -10,6 +10,16 @@ import (
 	"github.com/kelvyne/as3/bytecode"
 )
 
+// ErrExtractNoProtocolID means that the protocolId trait could not be found
+// when extracting class
+var ErrExtractNoProtocolID = errors.New("no protocolId found")
+
+// ErrExtractProtocolIDNotConst means that the protocolId trait is not a const trait
+var ErrExtractProtocolIDNotConst = errors.New("protocolId not a const trait")
+
+// ErrExtractProtocolIDNotInt means that the protocolId trait is not an integer
+var ErrExtractProtocolIDNotInt = errors.New("protocolId not an int trait")
+
 func (b *builder) ExtractClass(class as3.Class) (Class, error) {
 	trait, found := findMethodWithPrefix(class, "serializeAs_")
 	if !found {
@@ -31,7 +41,7 @@ func (b *builder) ExtractClass(class as3.Class) (Class, error) {
 		fieldMap[f.Name] = &fields[i]
 	}
 
-	if err := b.extractSerializeMethods(class, m, fieldMap); err != nil {
+	if err = b.extractSerializeMethods(class, m, fieldMap); err != nil {
 		return Class{}, err
 	}
 
@@ -39,7 +49,32 @@ func (b *builder) ExtractClass(class as3.Class) (Class, error) {
 		reduceType(&fields[i])
 	}
 
-	return Class{class.Name, class.SuperName, fields}, nil
+	protocolID, err := b.extractProtocolID(class)
+	if err != nil {
+		return Class{}, err
+	}
+
+	superName := class.SuperName
+	if superName == "Object" {
+		superName = ""
+	}
+	return Class{class.Name, superName, fields, protocolID}, nil
+}
+
+func (b *builder) extractProtocolID(class as3.Class) (uint16, error) {
+	for _, t := range class.ClassTraits.Slots {
+		if t.Name == "protocolId" {
+			if t.Source.Kind != bytecode.TraitsInfoConst {
+				return 0, ErrExtractProtocolIDNotConst
+			}
+			if t.Source.VKind != bytecode.SlotKindInt {
+				return 0, ErrExtractProtocolIDNotInt
+			}
+			id := b.abcFile.Source.ConstantPool.Integers[t.Source.VIndex]
+			return uint16(id), nil
+		}
+	}
+	return 0, ErrExtractNoProtocolID
 }
 
 func (b *builder) extractMessageFields(class as3.Class) (f []Field, err error) {

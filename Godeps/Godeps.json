@@ -9,11 +9,11 @@
 		},
 		{
 			"ImportPath": "github.com/kelvyne/as3",
-			"Rev": "69dda5d5a5293044dae3d809cd5d88176a3d475b"
+			"Rev": "a57ed456d3d6f1d1a5d6228c55445081243bd321"
 		},
 		{
 			"ImportPath": "github.com/kelvyne/as3/bytecode",
-			"Rev": "69dda5d5a5293044dae3d809cd5d88176a3d475b"
+			"Rev": "a57ed456d3d6f1d1a5d6228c55445081243bd321"
 		},
 		{
 			"ImportPath": "github.com/kelvyne/swf",

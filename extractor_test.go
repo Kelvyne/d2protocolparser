@@ -36,6 +36,8 @@ func Test_builder_ExtractClass(t *testing.T) {
 	simple, _ := abc.GetClassByName("GameFightOptionStateUpdateMessage")
 	byteArray, _ := abc.GetClassByName("RawDataMessage")
 	child, _ := abc.GetClassByName("IdentificationSuccessWithLoginTokenMessage")
+	unsigned, _ := abc.GetClassByName("CharacterLevelUpMessage")
+	typeClass, _ := abc.GetClassByName("KrosmasterFigure")
 
 	type args struct {
 		class as3.Class
@@ -53,11 +55,12 @@ func Test_builder_ExtractClass(t *testing.T) {
 				"GameFightOptionStateUpdateMessage",
 				"NetworkMessage",
 				[]Field{
-					Field{Name: "fightId", Type: "int16", WriteMethod: "writeShort"},
-					Field{Name: "teamId", Type: "byte", WriteMethod: "writeByte"},
-					Field{Name: "option", Type: "byte", WriteMethod: "writeByte"},
+					Field{Name: "fightId", Type: "uint16", WriteMethod: "writeShort"},
+					Field{Name: "teamId", Type: "uint8", WriteMethod: "writeByte"},
+					Field{Name: "option", Type: "uint8", WriteMethod: "writeByte"},
 					Field{Name: "state", Type: "bool", WriteMethod: "writeBoolean"},
 				},
+				5927,
 			},
 			false,
 		},
@@ -69,10 +72,11 @@ func Test_builder_ExtractClass(t *testing.T) {
 				"NetworkMessage",
 				[]Field{
 					Field{
-						Name: "content", Type: "byte", WriteMethod: "writeByte",
+						Name: "content", Type: "int8", WriteMethod: "writeByte",
 						IsVector: true, IsDynamicLength: true, WriteLengthMethod: "writeVarInt",
 					},
 				},
+				6253,
 			},
 			false,
 		},
@@ -85,6 +89,36 @@ func Test_builder_ExtractClass(t *testing.T) {
 				[]Field{
 					Field{Name: "loginToken", Type: "String", WriteMethod: "writeUTF"},
 				},
+				6209,
+			},
+			false,
+		},
+		{
+			"unsigned",
+			args{unsigned},
+			Class{
+				"CharacterLevelUpMessage",
+				"NetworkMessage",
+				[]Field{
+					Field{Name: "newLevel", Type: "uint8", WriteMethod: "writeByte"},
+				},
+				5670,
+			},
+			false,
+		},
+		{
+			"type",
+			args{typeClass},
+			Class{
+				"KrosmasterFigure",
+				"",
+				[]Field{
+					Field{Name: "uid", Type: "String", WriteMethod: "writeUTF"},
+					Field{Name: "figure", Type: "uint16", WriteMethod: "writeVarShort"},
+					Field{Name: "pedestal", Type: "uint16", WriteMethod: "writeVarShort"},
+					Field{Name: "bound", Type: "bool", WriteMethod: "writeBoolean"},
+				},
+				397,
 			},
 			false,
 		},
