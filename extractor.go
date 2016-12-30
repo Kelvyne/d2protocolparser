@@ -35,11 +35,11 @@ func (b *builder) ExtractClass(class as3.Class) (Class, error) {
 		return Class{}, err
 	}
 
-	for _, field := range fields {
-		reduceType(&field)
+	for i := range fields {
+		reduceType(&fields[i])
 	}
 
-	return Class{class, class.Name, class.SuperName, fields}, nil
+	return Class{class.Name, class.SuperName, fields}, nil
 }
 
 func (b *builder) extractMessageFields(class as3.Class) (f []Field, err error) {

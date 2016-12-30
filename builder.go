@@ -23,7 +23,6 @@ type Protocol struct {
 
 // Class represents a Dofus 2 Protocol class
 type Class struct {
-	Source as3.Class
 	Name   string
 	Parent string
 	Fields []Field

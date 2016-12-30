@@ -23,15 +23,15 @@ func isPublicQName(abc *as3.AbcFile, m bytecode.MultinameInfo) bool {
 	return isPublicNamespace(abc, m.Namespace)
 }
 
-func isPublicNamespace(abc *as3.AbcFile, nsId uint32) bool {
-	ns := abc.Source.ConstantPool.Namespaces[nsId]
+func isPublicNamespace(abc *as3.AbcFile, nsID uint32) bool {
+	ns := abc.Source.ConstantPool.Namespaces[nsID]
 	return ns.Kind == bytecode.NamespaceKindPackageNamespace || ns.Kind == bytecode.NamespaceKindNamespace
 }
 
 func isAs3ScalarType(t string) bool {
-	scalarTypes := []string{"int", "uint", "Number"}
+	scalarTypes := []string{"int", "uint", "float", "bool", "byte"}
 	for _, s := range scalarTypes {
-		if s == t {
+		if strings.HasPrefix(t, s) {
 			return true
 		}
 	}
