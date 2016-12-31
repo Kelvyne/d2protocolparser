@@ -39,6 +39,8 @@ func Test_builder_ExtractClass(t *testing.T) {
 	unsigned, _ := abc.GetClassByName("CharacterLevelUpMessage")
 	typeClass, _ := abc.GetClassByName("KrosmasterFigure")
 	bbw, _ := abc.GetClassByName("IdentificationMessage")
+	typeManagerVector, _ := abc.GetClassByName("BasicCharactersListMessage")
+	typeManager, _ := abc.GetClassByName("GameContextActorInformations")
 
 	type args struct {
 		class as3.Class
@@ -141,6 +143,34 @@ func Test_builder_ExtractClass(t *testing.T) {
 					Field{Name: "failedAttempts", Type: "uint16", WriteMethod: "writeVarShort", IsVector: true, IsDynamicLength: true, WriteLengthMethod: "writeShort"},
 				},
 				4,
+			},
+			false,
+		},
+		{
+			"typeManagerVector",
+			args{typeManagerVector},
+			Class{
+				"BasicCharactersListMessage",
+				"NetworkMessage",
+				[]Field{
+					Field{Name: "characters", Type: "CharacterBaseInformations", IsVector: true, IsDynamicLength: true, WriteLengthMethod: "writeShort", UseTypeManager: true},
+				},
+				6475,
+			},
+			false,
+		},
+		{
+			"typeManager",
+			args{typeManager},
+			Class{
+				"GameContextActorInformations",
+				"",
+				[]Field{
+					Field{Name: "contextualId", Type: "float64", WriteMethod: "writeDouble"},
+					Field{Name: "look", Type: "EntityLook"},
+					Field{Name: "disposition", Type: "EntityDispositionInformations", UseTypeManager: true},
+				},
+				150,
 			},
 			false,
 		},
