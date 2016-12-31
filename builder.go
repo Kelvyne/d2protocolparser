@@ -41,6 +41,9 @@ type Field struct {
 	WriteLengthMethod string
 
 	UseTypeManager bool
+
+	UseBBW      bool // Use BooleanByteWrapper
+	BBWPosition uint
 }
 
 type builder struct {

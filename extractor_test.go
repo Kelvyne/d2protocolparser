@@ -38,6 +38,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 	child, _ := abc.GetClassByName("IdentificationSuccessWithLoginTokenMessage")
 	unsigned, _ := abc.GetClassByName("CharacterLevelUpMessage")
 	typeClass, _ := abc.GetClassByName("KrosmasterFigure")
+	bbw, _ := abc.GetClassByName("IdentificationMessage")
 
 	type args struct {
 		class as3.Class
@@ -119,6 +120,27 @@ func Test_builder_ExtractClass(t *testing.T) {
 					Field{Name: "bound", Type: "bool", WriteMethod: "writeBoolean"},
 				},
 				397,
+			},
+			false,
+		},
+		{
+			"BooleanByteWrapper",
+			args{bbw},
+			Class{
+				"IdentificationMessage",
+				"NetworkMessage",
+				[]Field{
+					Field{Name: "version", Type: "VersionExtended", WriteMethod: ""},
+					Field{Name: "lang", Type: "String", WriteMethod: "writeUTF"},
+					Field{Name: "credentials", Type: "int8", WriteMethod: "writeByte", IsVector: true, IsDynamicLength: true, WriteLengthMethod: "writeVarInt"},
+					Field{Name: "serverId", Type: "int16", WriteMethod: "writeShort"},
+					Field{Name: "autoconnect", Type: "Boolean", WriteMethod: "", UseBBW: true, BBWPosition: 0},
+					Field{Name: "useCertificate", Type: "Boolean", WriteMethod: "", UseBBW: true, BBWPosition: 1},
+					Field{Name: "useLoginToken", Type: "Boolean", WriteMethod: "", UseBBW: true, BBWPosition: 2},
+					Field{Name: "sessionOptionalSalt", Type: "int64", WriteMethod: "writeVarLong"},
+					Field{Name: "failedAttempts", Type: "uint16", WriteMethod: "writeVarShort", IsVector: true, IsDynamicLength: true, WriteLengthMethod: "writeShort"},
+				},
+				4,
 			},
 			false,
 		},

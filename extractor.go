@@ -316,6 +316,40 @@ func handleGetProperty(b *builder, class as3.Class, fields map[string]*Field, in
 	return field, nil
 }
 
+func handleBBWProp(b *builder, class as3.Class, fields map[string]*Field, instrs []bytecode.Instr, last *Field) (*Field, error) {
+	/*
+	   getlex Qname(PackageNamespace("com.ankamagames.jerakine.network.utils"),"BooleanByteWrapper")
+	   getlocal_2
+	   pushbyte 0
+	   getlocal_0
+	   getproperty Qname(PackageNamespace("","243"),"autoconnect")
+	   callproperty Qname(PackageNamespace("","243"),"setFlag") 3
+	*/
+
+	lex := instrs[0]
+	lexMultiname := b.abcFile.Source.ConstantPool.Multinames[lex.Operands[0]]
+	lexName := b.abcFile.Source.ConstantPool.Strings[lexMultiname.Name]
+	if lexName != "BooleanByteWrapper" {
+		return nil, nil
+	}
+
+	push := instrs[2]
+	position := uint(push.Operands[0])
+
+	getProp := instrs[4]
+	propMultiname := b.abcFile.Source.ConstantPool.Multinames[getProp.Operands[0]]
+	prop := b.abcFile.Source.ConstantPool.Strings[propMultiname.Name]
+
+	field, ok := fields[prop]
+	if !ok || field.Type != "Boolean" {
+		return nil, fmt.Errorf("%v.%v: %v usage of BooleanByteWrapper on non boolean field", class.Namespace, class.Name, prop)
+	}
+
+	field.UseBBW = true
+	field.BBWPosition = position
+	return field, nil
+}
+
 func (b *builder) extractSerializeMethods(class as3.Class, m as3.Method, fields map[string]*Field) error {
 	checkPattern := func(instrs []bytecode.Instr, pattern []string) bool {
 		if len(pattern) > len(instrs) {
@@ -338,6 +372,7 @@ func (b *builder) extractSerializeMethods(class as3.Class, m as3.Method, fields 
 	patterns := []pattern{
 		{handleVecPropDynamicLen, []string{"getlocal", "increment", "convert", "setlocal", "getlocal", "pushbyte", "iflt"}},
 		{handleVecTypeManagerProp, []string{"getproperty", "getlocal", "getproperty", "getlex", "astypelate", "callproperty"}},
+		{handleBBWProp, []string{"getlex", "getlocal", "pushbyte", "getlocal", "getproperty", "callproperty"}},
 		{handleVecScalarProp, []string{"getproperty", "getlocal", "getproperty", "callpropvoid"}},
 		{handleVecPropLength, []string{"getproperty", "getproperty", "callpropvoid"}},
 		{handleSimpleProp, []string{"getproperty", "callpropvoid"}},
