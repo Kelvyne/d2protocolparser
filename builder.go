@@ -121,8 +121,8 @@ func (b *builder) Build() (Protocol, error) {
 	var types []Class
 	var messages []Class
 	for _, class := range b.abcFile.Classes {
-		isType := strings.HasPrefix(class.Namespace, messagePrefix)
-		isMessage := strings.HasPrefix(class.Namespace, typePrefix)
+		isMessage := strings.HasPrefix(class.Namespace, messagePrefix)
+		isType := strings.HasPrefix(class.Namespace, typePrefix)
 		if isType || isMessage {
 			c, err := b.ExtractClass(class)
 			if err != nil {
