@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/kelvyne/kaykin/d2protocolbuilder",
+	"ImportPath": "github.com/kelvyne/kaykin/d2protocolparser",
 	"GoVersion": "go1.7",
 	"GodepVersion": "v75",
 	"Deps": [
