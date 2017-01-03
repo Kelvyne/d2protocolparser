@@ -41,6 +41,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 	bbw, _ := abc.GetClassByName("IdentificationMessage")
 	typeManagerVector, _ := abc.GetClassByName("BasicCharactersListMessage")
 	typeManager, _ := abc.GetClassByName("GameContextActorInformations")
+	longInt, _ := abc.GetClassByName("AllianceInvitationMessage")
 
 	type args struct {
 		class as3.Class
@@ -171,6 +172,19 @@ func Test_builder_ExtractClass(t *testing.T) {
 					Field{Name: "disposition", Type: "EntityDispositionInformations", UseTypeManager: true},
 				},
 				150,
+			},
+			false,
+		},
+		{
+			"longInt",
+			args{longInt},
+			Class{
+				"AllianceInvitationMessage",
+				"NetworkMessage",
+				[]Field{
+					Field{Name: "targetId", Type: "int64", WriteMethod: "writeVarLong"},
+				},
+				6395,
 			},
 			false,
 		},
