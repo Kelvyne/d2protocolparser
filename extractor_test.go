@@ -43,6 +43,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 	typeManager, _ := abc.GetClassByName("GameContextActorInformations")
 	longInt, _ := abc.GetClassByName("AllianceInvitationMessage")
 	strange, _ := abc.GetClassByName("GameRolePlayGroupMonsterInformations")
+	dataContainer, _ := abc.GetClassByName("NetworkDataContainerMessage")
 
 	type args struct {
 		class as3.Class
@@ -206,6 +207,22 @@ func Test_builder_ExtractClass(t *testing.T) {
 					Field{Name: "hasAVARewardToken", Type: "bool", UseBBW: true, BBWPosition: 2},
 				},
 				160,
+			},
+			false,
+		},
+		{
+			"dataContainer",
+			args{dataContainer},
+			Class{
+				"NetworkDataContainerMessage",
+				"NetworkMessage",
+				[]Field{
+					Field{
+						Name: "content", Type: "uint8", WriteMethod: "writeByte", Method: "UInt8",
+						IsVector: true, IsDynamicLength: true, WriteLengthMethod: "writeVarInt",
+					},
+				},
+				2,
 			},
 			false,
 		},

@@ -24,6 +24,12 @@ func reduceType(f *Field) {
 	}
 	if f.WriteMethod == "" {
 		return
+	} else if f.WriteMethod == "writeBytes" {
+		// hack to get NetworkDataContainerMessage working
+		f.IsVector = true
+		f.IsDynamicLength = true
+		f.WriteLengthMethod = "writeVarInt"
+		f.WriteMethod = "writeByte"
 	}
 	reduced, canReduce := writeMethodTypesMap[f.WriteMethod]
 	if canReduce {
