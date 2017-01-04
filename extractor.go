@@ -47,6 +47,7 @@ func (b *builder) ExtractClass(class as3.Class) (Class, error) {
 
 	for i := range fields {
 		reduceType(&fields[i])
+		reduceMethod(&fields[i])
 	}
 
 	protocolID, err := b.extractProtocolID(class)
@@ -88,6 +89,7 @@ func (b *builder) extractMessageFields(class as3.Class) (f []Field, err error) {
 			isVector = true
 		} else if t == "ByteArray" {
 			isVector = true
+			t = "uint"
 		}
 		return Field{Name: name, Type: t, IsVector: isVector}
 	}

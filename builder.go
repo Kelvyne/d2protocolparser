@@ -34,6 +34,7 @@ type Field struct {
 	Name        string
 	Type        string
 	WriteMethod string
+	Method      string // Method contains the name of the method that should be used for scalar types
 
 	IsVector          bool
 	IsDynamicLength   bool
