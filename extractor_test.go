@@ -42,6 +42,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 	typeManagerVector, _ := abc.GetClassByName("BasicCharactersListMessage")
 	typeManager, _ := abc.GetClassByName("GameContextActorInformations")
 	longInt, _ := abc.GetClassByName("AllianceInvitationMessage")
+	strange, _ := abc.GetClassByName("GameRolePlayGroupMonsterInformations")
 
 	type args struct {
 		class as3.Class
@@ -137,9 +138,9 @@ func Test_builder_ExtractClass(t *testing.T) {
 					Field{Name: "lang", Type: "string", WriteMethod: "writeUTF", Method: "String"},
 					Field{Name: "credentials", Type: "int8", WriteMethod: "writeByte", Method: "Int8", IsVector: true, IsDynamicLength: true, WriteLengthMethod: "writeVarInt"},
 					Field{Name: "serverId", Type: "int16", WriteMethod: "writeShort", Method: "Int16"},
-					Field{Name: "autoconnect", Type: "Boolean", UseBBW: true, BBWPosition: 0},
-					Field{Name: "useCertificate", Type: "Boolean", UseBBW: true, BBWPosition: 1},
-					Field{Name: "useLoginToken", Type: "Boolean", UseBBW: true, BBWPosition: 2},
+					Field{Name: "autoconnect", Type: "bool", UseBBW: true, BBWPosition: 0},
+					Field{Name: "useCertificate", Type: "bool", UseBBW: true, BBWPosition: 1},
+					Field{Name: "useLoginToken", Type: "bool", UseBBW: true, BBWPosition: 2},
 					Field{Name: "sessionOptionalSalt", Type: "int64", WriteMethod: "writeVarLong", Method: "VarInt64"},
 					Field{Name: "failedAttempts", Type: "uint16", WriteMethod: "writeVarShort", Method: "VarUInt16", IsVector: true, IsDynamicLength: true, WriteLengthMethod: "writeShort"},
 				},
@@ -185,6 +186,26 @@ func Test_builder_ExtractClass(t *testing.T) {
 					Field{Name: "targetId", Type: "int64", WriteMethod: "writeVarLong", Method: "VarInt64"},
 				},
 				6395,
+			},
+			false,
+		},
+		{
+			"strange",
+			args{strange},
+			Class{
+				"GameRolePlayGroupMonsterInformations",
+				"GameRolePlayActorInformations",
+				[]Field{
+					Field{Name: "staticInfos", Type: "GroupMonsterStaticInformations", UseTypeManager: true},
+					Field{Name: "creationTime", Type: "float64", WriteMethod: "writeDouble", Method: "Double"},
+					Field{Name: "ageBonusRate", Type: "uint32", WriteMethod: "writeInt", Method: "UInt32"},
+					Field{Name: "lootShare", Type: "int8", WriteMethod: "writeByte", Method: "Int8"},
+					Field{Name: "alignmentSide", Type: "int8", WriteMethod: "writeByte", Method: "Int8"},
+					Field{Name: "keyRingBonus", Type: "bool", UseBBW: true, BBWPosition: 0},
+					Field{Name: "hasHardcoreDrop", Type: "bool", UseBBW: true, BBWPosition: 1},
+					Field{Name: "hasAVARewardToken", Type: "bool", UseBBW: true, BBWPosition: 2},
+				},
+				160,
 			},
 			false,
 		},

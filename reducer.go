@@ -19,6 +19,9 @@ var writeMethodTypesMap = map[string]string{
 }
 
 func reduceType(f *Field) {
+	if f.Type == "Boolean" {
+		f.Type = "bool"
+	}
 	if f.WriteMethod == "" {
 		return
 	}
