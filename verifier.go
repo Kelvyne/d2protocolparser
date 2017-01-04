@@ -27,7 +27,7 @@ func (e verifyError) Error() string {
 func Verify(p *Protocol) error {
 	for _, t := range p.Types {
 		if err := verifyClass(t); err != nil {
-			fmt.Println(err)
+			return err
 		}
 	}
 	return nil
@@ -44,7 +44,7 @@ func verifyClass(c Class) error {
 
 func verifyField(f Field) error {
 	// scalar type but no write method
-	if isAs3ScalarType(f.Type) && f.WriteMethod == "" {
+	if isAs3ScalarType(f.Type) && f.WriteMethod == "" && !(f.Type == "bool" && f.UseBBW) {
 		return ErrVerifyScalarNoWrite
 	}
 	// vector with static type but no length
