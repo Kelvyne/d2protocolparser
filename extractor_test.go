@@ -91,7 +91,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 				"IdentificationSuccessWithLoginTokenMessage",
 				"IdentificationSuccessMessage",
 				[]Field{
-					Field{Name: "loginToken", Type: "String", WriteMethod: "writeUTF"},
+					Field{Name: "loginToken", Type: "string", WriteMethod: "writeUTF"},
 				},
 				6209,
 			},
@@ -117,7 +117,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 				"KrosmasterFigure",
 				"",
 				[]Field{
-					Field{Name: "uid", Type: "String", WriteMethod: "writeUTF"},
+					Field{Name: "uid", Type: "string", WriteMethod: "writeUTF"},
 					Field{Name: "figure", Type: "uint16", WriteMethod: "writeVarShort"},
 					Field{Name: "pedestal", Type: "uint16", WriteMethod: "writeVarShort"},
 					Field{Name: "bound", Type: "bool", WriteMethod: "writeBoolean"},
@@ -134,7 +134,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 				"NetworkMessage",
 				[]Field{
 					Field{Name: "version", Type: "VersionExtended", WriteMethod: ""},
-					Field{Name: "lang", Type: "String", WriteMethod: "writeUTF"},
+					Field{Name: "lang", Type: "string", WriteMethod: "writeUTF"},
 					Field{Name: "credentials", Type: "int8", WriteMethod: "writeByte", IsVector: true, IsDynamicLength: true, WriteLengthMethod: "writeVarInt"},
 					Field{Name: "serverId", Type: "int16", WriteMethod: "writeShort"},
 					Field{Name: "autoconnect", Type: "Boolean", WriteMethod: "", UseBBW: true, BBWPosition: 0},

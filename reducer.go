@@ -16,6 +16,7 @@ var WriteMethodTypesMap = map[string]string{
 	"writeUnsignedInt": "uint32",
 	"writeFloat":       "float32",
 	"writeDouble":      "float64",
+	"writeUTF":         "string",
 }
 
 func reduceType(f *Field) {
