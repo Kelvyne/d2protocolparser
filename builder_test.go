@@ -1,6 +1,7 @@
 package d2protocolparser
 
 import "testing"
+import "reflect"
 
 func BenchmarkBuild(b *testing.B) {
 	for n := 0; n < b.N; n++ {
@@ -12,8 +13,13 @@ func BenchmarkBuild(b *testing.B) {
 }
 
 func TestBuild(t *testing.T) {
-	_, err := Build("./fixtures/DofusInvoker.swf")
+	p, err := Build("./fixtures/DofusInvoker.swf")
 	if err != nil {
 		t.Errorf("expected nil, got %v", err)
+	}
+
+	expectedVersion := Version{2, 39, 0, 117122, 0}
+	if !reflect.DeepEqual(p.Version, expectedVersion) {
+		t.Errorf("expected %v, got %v", expectedVersion, p.Version)
 	}
 }

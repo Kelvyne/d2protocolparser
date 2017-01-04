@@ -20,6 +20,9 @@ var ErrExtractProtocolIDNotConst = errors.New("protocolId not a const trait")
 // ErrExtractProtocolIDNotInt means that the protocolId trait is not an integer
 var ErrExtractProtocolIDNotInt = errors.New("protocolId not an int trait")
 
+// ErrExtractNoBuildInfos means that the class BuildInfos was not found
+var ErrExtractNoBuildInfos = errors.New("no BuildInfos found")
+
 func (b *builder) ExtractClass(class as3.Class) (Class, error) {
 	trait, found := findMethodWithPrefix(class, "serializeAs_")
 	if !found {
@@ -319,15 +322,6 @@ func handleGetProperty(b *builder, class as3.Class, fields map[string]*Field, in
 }
 
 func handleBBWProp(b *builder, class as3.Class, fields map[string]*Field, instrs []bytecode.Instr, last *Field) (*Field, error) {
-	/*
-	   getlex Qname(PackageNamespace("com.ankamagames.jerakine.network.utils"),"BooleanByteWrapper")
-	   getlocal_2
-	   pushbyte 0
-	   getlocal_0
-	   getproperty Qname(PackageNamespace("","243"),"autoconnect")
-	   callproperty Qname(PackageNamespace("","243"),"setFlag") 3
-	*/
-
 	lex := instrs[0]
 	lexMultiname := b.abcFile.Source.ConstantPool.Multinames[lex.Operands[0]]
 	lexName := b.abcFile.Source.ConstantPool.Strings[lexMultiname.Name]
@@ -404,4 +398,64 @@ func (b *builder) extractSerializeMethods(class as3.Class, m as3.Method, fields 
 		}
 	}
 	return nil
+}
+
+func (b *builder) ExtractVersion() (Version, error) {
+	findBuildInfos := func() *as3.Class {
+		for _, c := range b.abcFile.Classes {
+			if c.Namespace == "com.ankamagames.dofus" && c.Name == "BuildInfos" {
+				return &c
+			}
+		}
+		return nil
+	}
+
+	extractValue := func(i bytecode.Instr) (uint, error) {
+		if i.Model.Name == "pushbyte" {
+			return uint(i.Operands[0]), nil
+		} else if i.Model.Name == "pushint" {
+			v := b.abcFile.Source.ConstantPool.Integers[i.Operands[0]]
+			return uint(v), nil
+		}
+		return 0, fmt.Errorf("%v instruction detected when extracting version", i.Model.Name)
+	}
+
+	buildInfos := findBuildInfos()
+	if buildInfos == nil {
+		return Version{}, ErrExtractNoBuildInfos
+	}
+
+	m := b.abcFile.Methods[buildInfos.ClassInfo.CInit]
+	if err := m.BodyInfo.Disassemble(); err != nil {
+		return Version{}, fmt.Errorf("could not disassemble BuildInfos: %v", err)
+	}
+
+	instrs := m.BodyInfo.Instructions
+	majInstr := instrs[4]
+	minInstr := instrs[5]
+	relInstr := instrs[6]
+	revInstr := instrs[14]
+	patchInstr := instrs[17]
+
+	major, err := extractValue(majInstr)
+	if err != nil {
+		return Version{}, err
+	}
+	minor, err := extractValue(minInstr)
+	if err != nil {
+		return Version{}, err
+	}
+	release, err := extractValue(relInstr)
+	if err != nil {
+		return Version{}, err
+	}
+	revision, err := extractValue(revInstr)
+	if err != nil {
+		return Version{}, err
+	}
+	patch, err := extractValue(patchInstr)
+	if err != nil {
+		return Version{}, err
+	}
+	return Version{major, minor, release, revision, patch}, nil
 }

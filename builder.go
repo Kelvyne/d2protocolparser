@@ -19,6 +19,7 @@ import (
 type Protocol struct {
 	Messages []Class
 	Types    []Class
+	Version  Version
 }
 
 // Class represents a Dofus 2 Protocol class
@@ -45,6 +46,15 @@ type Field struct {
 
 	UseBBW      bool // Use BooleanByteWrapper
 	BBWPosition uint
+}
+
+// Version represents a Dofus 2 Protocol version
+type Version struct {
+	Major    uint
+	Minor    uint
+	Release  uint
+	Revision uint
+	Patch    uint
 }
 
 type builder struct {
@@ -137,5 +147,9 @@ func (b *builder) Build() (Protocol, error) {
 			}
 		}
 	}
-	return Protocol{messages, types}, nil
+	v, err := b.ExtractVersion()
+	if err != nil {
+		return Protocol{}, err
+	}
+	return Protocol{messages, types, v}, nil
 }
