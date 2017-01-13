@@ -233,7 +233,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			Class{
 				"HelloGameMessage",
 				"NetworkMessage",
-				[]Field{},
+				nil,
 				101,
 			},
 			false,
