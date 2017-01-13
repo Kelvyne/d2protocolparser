@@ -44,6 +44,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 	longInt, _ := abc.GetClassByName("AllianceInvitationMessage")
 	strange, _ := abc.GetClassByName("GameRolePlayGroupMonsterInformations")
 	dataContainer, _ := abc.GetClassByName("NetworkDataContainerMessage")
+	protocolId, _ := abc.GetClassByName("HelloGameMessage")
 
 	type args struct {
 		class as3.Class
@@ -223,6 +224,17 @@ func Test_builder_ExtractClass(t *testing.T) {
 					},
 				},
 				2,
+			},
+			false,
+		},
+		{
+			"protocolId",
+			args{protocolId},
+			Class{
+				"HelloGameMessage",
+				"NetworkMessage",
+				[]Field{},
+				101,
 			},
 			false,
 		},

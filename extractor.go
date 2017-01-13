@@ -74,6 +74,9 @@ func (b *builder) extractProtocolID(class as3.Class) (uint16, error) {
 			if t.Source.VKind != bytecode.SlotKindInt {
 				return 0, ErrExtractProtocolIDNotInt
 			}
+			if class.Name == "HelloGameMessage" {
+				fmt.Println("ici")
+			}
 			id := b.abcFile.Source.ConstantPool.Integers[t.Source.VIndex]
 			return uint16(id), nil
 		}

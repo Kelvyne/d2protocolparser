@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/kelvyne/kaykin/d2protocolparser",
+	"ImportPath": "github.com/kelvyne/d2protocolparser",
 	"GoVersion": "go1.7",
 	"GodepVersion": "v75",
 	"Deps": [
@@ -9,11 +9,11 @@
 		},
 		{
 			"ImportPath": "github.com/kelvyne/as3",
-			"Rev": "a57ed456d3d6f1d1a5d6228c55445081243bd321"
+			"Rev": "8e79a7855189367842a7a73c0243c3b5910c1009"
 		},
 		{
 			"ImportPath": "github.com/kelvyne/as3/bytecode",
-			"Rev": "a57ed456d3d6f1d1a5d6228c55445081243bd321"
+			"Rev": "8e79a7855189367842a7a73c0243c3b5910c1009"
 		},
 		{
 			"ImportPath": "github.com/kelvyne/swf",
