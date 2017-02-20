@@ -23,6 +23,19 @@ var ErrExtractProtocolIDNotInt = errors.New("protocolId not an int trait")
 // ErrExtractNoBuildInfos means that the class BuildInfos was not found
 var ErrExtractNoBuildInfos = errors.New("no BuildInfos found")
 
+func (b *builder) ExtractEnum(class as3.Class) (Enum, error) {
+	var values []EnumValue
+	for _, trait := range class.ClassTraits.Slots {
+		if trait.Source.VKind != bytecode.SlotKindInt {
+			return Enum{}, fmt.Errorf("enumeration value %v of %v is not an uint", trait.Name, class.Name)
+		}
+		name := trait.Name
+		value := b.abcFile.Source.ConstantPool.Integers[trait.Source.VIndex]
+		values = append(values, EnumValue{name, value})
+	}
+	return Enum{class.Name, values}, nil
+}
+
 func (b *builder) ExtractClass(class as3.Class) (Class, error) {
 	trait, found := findMethodWithPrefix(class, "serializeAs_")
 	if !found {

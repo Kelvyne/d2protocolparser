@@ -19,7 +19,20 @@ import (
 type Protocol struct {
 	Messages []Class
 	Types    []Class
+	Enums    []Enum
 	Version  Version
+}
+
+// Enum represents a Dofus 2 Protocol Enumeration Class
+type Enum struct {
+	Name   string
+	Values []EnumValue
+}
+
+// EnumValue represents a single Enumeration Values
+type EnumValue struct {
+	Name  string
+	Value int32
 }
 
 // Class represents a Dofus 2 Protocol class
@@ -126,11 +139,13 @@ func Build(path string) (*Protocol, error) {
 const (
 	messagePrefix = "com.ankamagames.dofus.network.messages."
 	typePrefix    = "com.ankamagames.dofus.network.types."
+	enumPrefix    = "com.ankamagames.dofus.network.enums"
 )
 
 func (b *builder) Build() (Protocol, error) {
 	var types []Class
 	var messages []Class
+	var enums []Enum
 	for _, class := range b.abcFile.Classes {
 		isMessage := strings.HasPrefix(class.Namespace, messagePrefix)
 		isType := strings.HasPrefix(class.Namespace, typePrefix)
@@ -145,11 +160,17 @@ func (b *builder) Build() (Protocol, error) {
 			case isMessage:
 				messages = append(messages, c)
 			}
+		} else if strings.HasPrefix(class.Namespace, enumPrefix) {
+			e, err := b.ExtractEnum(class)
+			if err != nil {
+				return Protocol{}, err
+			}
+			enums = append(enums, e)
 		}
 	}
 	v, err := b.ExtractVersion()
 	if err != nil {
 		return Protocol{}, err
 	}
-	return Protocol{messages, types, v}, nil
+	return Protocol{messages, types, enums, v}, nil
 }

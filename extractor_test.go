@@ -255,3 +255,67 @@ func Test_builder_ExtractClass(t *testing.T) {
 		})
 	}
 }
+
+func Test_builder_ExtractEnum(t *testing.T) {
+	abc := open(t)
+	simple, _ := abc.GetClassByName("AccessoryPreviewErrorEnum")
+	negative, _ := abc.GetClassByName("AlignmentSideEnum")
+
+	type fields struct {
+		abcFile *as3.AbcFile
+	}
+	type args struct {
+		class as3.Class
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    Enum
+		wantErr bool
+	}{
+		{
+			"simple",
+			args{simple},
+			Enum{
+				"AccessoryPreviewErrorEnum",
+				[]EnumValue{
+					{"PREVIEW_ERROR", 0},
+					{"PREVIEW_COOLDOWN", 1},
+					{"PREVIEW_BAD_ITEM", 2},
+				},
+			},
+			false,
+		},
+		{
+			"negative",
+			args{negative},
+			Enum{
+				"AlignmentSideEnum",
+				[]EnumValue{
+					{"ALIGNMENT_UNKNOWN", -2},
+					{"ALIGNMENT_WITHOUT", -1},
+					{"ALIGNMENT_NEUTRAL", 0},
+					{"ALIGNMENT_ANGEL", 1},
+					{"ALIGNMENT_EVIL", 2},
+					{"ALIGNMENT_MERCENARY", 3},
+				},
+			},
+			false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			b := &builder{
+				abcFile: abc,
+			}
+			got, err := b.ExtractEnum(tt.args.class)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("builder.ExtractEnum() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("builder.ExtractEnum() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
