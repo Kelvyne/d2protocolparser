@@ -1,7 +1,9 @@
 package d2protocolparser
 
-import "testing"
-import "reflect"
+import (
+	"reflect"
+	"testing"
+)
 
 func BenchmarkBuild(b *testing.B) {
 	for n := 0; n < b.N; n++ {
