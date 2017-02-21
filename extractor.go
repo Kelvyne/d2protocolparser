@@ -72,7 +72,7 @@ func (b *builder) ExtractClass(class as3.Class) (Class, error) {
 	}
 
 	superName := class.SuperName
-	if superName == "Object" {
+	if superName == "Object" || superName == "NetworkMessage" {
 		superName = ""
 	}
 	return Class{class.Name, superName, fields, protocolID}, nil

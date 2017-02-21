@@ -60,7 +60,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{simple},
 			Class{
 				"GameFightOptionStateUpdateMessage",
-				"NetworkMessage",
+				"",
 				[]Field{
 					Field{Name: "fightId", Type: "uint16", WriteMethod: "writeShort", Method: "UInt16"},
 					Field{Name: "teamId", Type: "uint8", WriteMethod: "writeByte", Method: "UInt8"},
@@ -76,7 +76,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{byteArray},
 			Class{
 				"RawDataMessage",
-				"NetworkMessage",
+				"",
 				[]Field{
 					Field{
 						Name: "content", Type: "uint8", WriteMethod: "writeByte", Method: "UInt8",
@@ -105,7 +105,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{unsigned},
 			Class{
 				"CharacterLevelUpMessage",
-				"NetworkMessage",
+				"",
 				[]Field{
 					Field{Name: "newLevel", Type: "uint8", WriteMethod: "writeByte", Method: "UInt8"},
 				},
@@ -134,7 +134,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{bbw},
 			Class{
 				"IdentificationMessage",
-				"NetworkMessage",
+				"",
 				[]Field{
 					Field{Name: "version", Type: "VersionExtended"},
 					Field{Name: "lang", Type: "string", WriteMethod: "writeUTF", Method: "String"},
@@ -155,7 +155,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{typeManagerVector},
 			Class{
 				"BasicCharactersListMessage",
-				"NetworkMessage",
+				"",
 				[]Field{
 					Field{Name: "characters", Type: "CharacterBaseInformations", IsVector: true, IsDynamicLength: true, WriteLengthMethod: "writeShort", UseTypeManager: true},
 				},
@@ -183,7 +183,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{longInt},
 			Class{
 				"AllianceInvitationMessage",
-				"NetworkMessage",
+				"",
 				[]Field{
 					Field{Name: "targetId", Type: "int64", WriteMethod: "writeVarLong", Method: "VarInt64"},
 				},
@@ -216,7 +216,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{dataContainer},
 			Class{
 				"NetworkDataContainerMessage",
-				"NetworkMessage",
+				"",
 				[]Field{
 					Field{
 						Name: "content", Type: "uint8", WriteMethod: "writeByte", Method: "UInt8",
@@ -232,7 +232,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{protocolId},
 			Class{
 				"HelloGameMessage",
-				"NetworkMessage",
+				"",
 				nil,
 				101,
 			},
