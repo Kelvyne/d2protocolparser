@@ -71,11 +71,44 @@ func (b *builder) ExtractClass(class as3.Class) (Class, error) {
 		return Class{}, err
 	}
 
+	useHashFunc, err := b.extractUseHashFunc(class)
+
 	superName := class.SuperName
 	if superName == "Object" || superName == "NetworkMessage" {
 		superName = ""
 	}
-	return Class{class.Name, superName, fields, protocolID}, nil
+	return Class{class.Name, superName, fields, protocolID, useHashFunc}, nil
+}
+
+func (b *builder) extractUseHashFunc(class as3.Class) (bool, error) {
+	getPackFunc := func(c as3.Class) (bool, as3.Method) {
+		for _, m := range c.InstanceTraits.Methods {
+			if m.Name == "pack" {
+				return true, b.abcFile.Methods[m.Source.Method]
+			}
+		}
+		return false, as3.Method{}
+	}
+	f, m := getPackFunc(class)
+	if !f {
+		return false, nil
+	}
+	if err := m.BodyInfo.Disassemble(); err != nil {
+		return false, fmt.Errorf("could not disassemble pack method: %v", err)
+	}
+
+	for _, instr := range m.BodyInfo.Instructions {
+		if instr.Model.Name == "getlex" {
+			multiname := b.abcFile.Source.ConstantPool.Multinames[instr.Operands[0]]
+			if multiname.Kind == bytecode.MultinameKindQName {
+				name := b.abcFile.Source.ConstantPool.Strings[multiname.Name]
+				if name == "HASH_FUNCTION" {
+					return true, nil
+				}
+			}
+		}
+	}
+	return false, nil
 }
 
 func (b *builder) extractProtocolID(class as3.Class) (uint16, error) {

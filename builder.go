@@ -37,10 +37,11 @@ type EnumValue struct {
 
 // Class represents a Dofus 2 Protocol class
 type Class struct {
-	Name       string
-	Parent     string
-	Fields     []Field
-	ProtocolID uint16
+	Name        string
+	Parent      string
+	Fields      []Field
+	ProtocolID  uint16
+	UseHashFunc bool
 }
 
 // Field represents a class field
