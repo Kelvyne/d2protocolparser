@@ -61,6 +61,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{simple},
 			Class{
 				"GameFightOptionStateUpdateMessage",
+				"com.ankamagames.dofus.network.messages.game.context.fight",
 				"",
 				[]Field{
 					Field{Name: "fightId", Type: "uint16", WriteMethod: "writeShort", Method: "UInt16"},
@@ -78,6 +79,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{byteArray},
 			Class{
 				"RawDataMessage",
+				"com.ankamagames.dofus.network.messages.security",
 				"",
 				[]Field{
 					Field{
@@ -95,6 +97,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{child},
 			Class{
 				"IdentificationSuccessWithLoginTokenMessage",
+				"com.ankamagames.dofus.network.messages.connection",
 				"IdentificationSuccessMessage",
 				[]Field{
 					Field{Name: "loginToken", Type: "string", WriteMethod: "writeUTF", Method: "String"},
@@ -109,6 +112,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{unsigned},
 			Class{
 				"CharacterLevelUpMessage",
+				"com.ankamagames.dofus.network.messages.game.character.stats",
 				"",
 				[]Field{
 					Field{Name: "newLevel", Type: "uint8", WriteMethod: "writeByte", Method: "UInt8"},
@@ -123,6 +127,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{typeClass},
 			Class{
 				"KrosmasterFigure",
+				"com.ankamagames.dofus.network.types.web.krosmaster",
 				"",
 				[]Field{
 					Field{Name: "uid", Type: "string", WriteMethod: "writeUTF", Method: "String"},
@@ -140,6 +145,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{bbw},
 			Class{
 				"IdentificationMessage",
+				"com.ankamagames.dofus.network.messages.connection",
 				"",
 				[]Field{
 					Field{Name: "version", Type: "VersionExtended"},
@@ -162,6 +168,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{typeManagerVector},
 			Class{
 				"BasicCharactersListMessage",
+				"com.ankamagames.dofus.network.messages.game.character.choice",
 				"",
 				[]Field{
 					Field{Name: "characters", Type: "CharacterBaseInformations", IsVector: true, IsDynamicLength: true, WriteLengthMethod: "writeShort", UseTypeManager: true},
@@ -176,6 +183,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{typeManager},
 			Class{
 				"GameContextActorInformations",
+				"com.ankamagames.dofus.network.types.game.context",
 				"",
 				[]Field{
 					Field{Name: "contextualId", Type: "float64", WriteMethod: "writeDouble", Method: "Double"},
@@ -192,6 +200,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{longInt},
 			Class{
 				"AllianceInvitationMessage",
+				"com.ankamagames.dofus.network.messages.game.alliance",
 				"",
 				[]Field{
 					Field{Name: "targetId", Type: "int64", WriteMethod: "writeVarLong", Method: "VarInt64"},
@@ -206,6 +215,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{strange},
 			Class{
 				"GameRolePlayGroupMonsterInformations",
+				"com.ankamagames.dofus.network.types.game.context.roleplay",
 				"GameRolePlayActorInformations",
 				[]Field{
 					Field{Name: "staticInfos", Type: "GroupMonsterStaticInformations", UseTypeManager: true},
@@ -227,6 +237,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{dataContainer},
 			Class{
 				"NetworkDataContainerMessage",
+				"com.ankamagames.dofus.network.messages.common",
 				"",
 				[]Field{
 					Field{
@@ -244,6 +255,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{protocolId},
 			Class{
 				"HelloGameMessage",
+				"com.ankamagames.dofus.network.messages.game.approach",
 				"",
 				nil,
 				101,
@@ -256,6 +268,7 @@ func Test_builder_ExtractClass(t *testing.T) {
 			args{useHashFunc},
 			Class{
 				"BasicLatencyStatsMessage",
+				"com.ankamagames.dofus.network.messages.game.basic",
 				"",
 				[]Field{
 					Field{Name: "latency", Type: "uint16", WriteMethod: "writeShort", Method: "UInt16"},

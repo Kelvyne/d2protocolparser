@@ -77,7 +77,7 @@ func (b *builder) ExtractClass(class as3.Class) (Class, error) {
 	if superName == "Object" || superName == "NetworkMessage" {
 		superName = ""
 	}
-	return Class{class.Name, superName, fields, protocolID, useHashFunc}, nil
+	return Class{class.Name, class.Namespace, superName, fields, protocolID, useHashFunc}, nil
 }
 
 func (b *builder) extractUseHashFunc(class as3.Class) (bool, error) {
