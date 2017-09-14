@@ -2,6 +2,7 @@ package d2protocolparser
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"errors"
@@ -466,6 +467,14 @@ func (b *builder) ExtractVersion() (Version, error) {
 		return 0, fmt.Errorf("%v instruction detected when extracting version", i.Model.Name)
 	}
 
+	extractFromString := func(x string) (uint, error) {
+		n, err := strconv.Atoi(x)
+		if err != nil {
+			return 0, err
+		}
+		return uint(n), nil
+	}
+
 	buildInfos := findBuildInfos()
 	if buildInfos == nil {
 		return Version{}, ErrExtractNoBuildInfos
@@ -477,31 +486,69 @@ func (b *builder) ExtractVersion() (Version, error) {
 	}
 
 	instrs := m.BodyInfo.Instructions
-	majInstr := instrs[4]
-	minInstr := instrs[5]
-	relInstr := instrs[6]
-	revInstr := instrs[14]
-	patchInstr := instrs[17]
 
-	major, err := extractValue(majInstr)
-	if err != nil {
-		return Version{}, err
+	// New versions of Dofus uses a new way to format the Version.
+	// public static var VERSION:Version = new Version("2.42.0",BuildTypeEnum.RELEASE,1027565,0);
+
+	var major, minor, release, revision, patch uint
+	var err error
+
+	if instrs[4].Model.Name == "pushstring" {
+		majMinRelInstr := instrs[4]
+		revInstr := instrs[7]
+		patchInstr := instrs[8]
+
+		strIdx := majMinRelInstr.Operands[0]
+		// string of format "MAJOR.MINOR.RELEASE"
+		majMinRel := strings.Split(b.abcFile.Source.ConstantPool.Strings[strIdx], ".")
+		major, err = extractFromString(majMinRel[0])
+		if err != nil {
+			return Version{}, err
+		}
+		minor, err = extractFromString(majMinRel[1])
+		if err != nil {
+			return Version{}, err
+		}
+		release, err = extractFromString(majMinRel[2])
+		if err != nil {
+			return Version{}, err
+		}
+		revision, err = extractValue(revInstr)
+		if err != nil {
+			return Version{}, err
+		}
+		patch, err = extractValue(patchInstr)
+		if err != nil {
+			return Version{}, err
+		}
+	} else {
+		majInstr := instrs[4]
+		minInstr := instrs[5]
+		relInstr := instrs[6]
+		revInstr := instrs[14]
+		patchInstr := instrs[17]
+
+		major, err = extractValue(majInstr)
+		if err != nil {
+			return Version{}, err
+		}
+		minor, err = extractValue(minInstr)
+		if err != nil {
+			return Version{}, err
+		}
+		release, err = extractValue(relInstr)
+		if err != nil {
+			return Version{}, err
+		}
+		revision, err = extractValue(revInstr)
+		if err != nil {
+			return Version{}, err
+		}
+		patch, err = extractValue(patchInstr)
+		if err != nil {
+			return Version{}, err
+		}
 	}
-	minor, err := extractValue(minInstr)
-	if err != nil {
-		return Version{}, err
-	}
-	release, err := extractValue(relInstr)
-	if err != nil {
-		return Version{}, err
-	}
-	revision, err := extractValue(revInstr)
-	if err != nil {
-		return Version{}, err
-	}
-	patch, err := extractValue(patchInstr)
-	if err != nil {
-		return Version{}, err
-	}
+
 	return Version{major, minor, release, revision, patch}, nil
 }

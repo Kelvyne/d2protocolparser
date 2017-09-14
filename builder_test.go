@@ -25,3 +25,15 @@ func TestBuild(t *testing.T) {
 		t.Errorf("expected %v, got %v", expectedVersion, p.Version)
 	}
 }
+
+func TestBuild_NewVersion(t *testing.T) {
+	p, err := Build("./fixtures/DofusInvoker2.swf")
+	if err != nil {
+		t.Errorf("expected nil, got %v", err)
+	}
+
+	expectedVersion := Version{2, 42, 0, 1027565, 0}
+	if !reflect.DeepEqual(p.Version, expectedVersion) {
+		t.Errorf("expected %v, got %v", expectedVersion, p.Version)
+	}
+}
