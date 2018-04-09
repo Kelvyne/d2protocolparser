@@ -490,10 +490,41 @@ func (b *builder) ExtractVersion() (Version, error) {
 	// New versions of Dofus uses a new way to format the Version.
 	// public static var VERSION:Version = new Version("2.42.0",BuildTypeEnum.RELEASE,1027565,0);
 
+	// Version 2.46 adds Debug informations
 	var major, minor, release, revision, patch uint
 	var err error
 
-	if instrs[4].Model.Name == "pushstring" {
+	fmt.Println(len(instrs))
+	fmt.Println(instrs)
+	if instrs[2].Model.Name == "debug" {
+		majMinRelInstr := instrs[5]
+		revInstr := instrs[8]
+		patchInstr := instrs[9]
+
+		strIdx := majMinRelInstr.Operands[0]
+		// string of format "MAJOR.MINOR.RELEASE"
+		majMinRel := strings.Split(b.abcFile.Source.ConstantPool.Strings[strIdx], ".")
+		major, err = extractFromString(majMinRel[0])
+		if err != nil {
+			return Version{}, err
+		}
+		minor, err = extractFromString(majMinRel[1])
+		if err != nil {
+			return Version{}, err
+		}
+		release, err = extractFromString(majMinRel[2])
+		if err != nil {
+			return Version{}, err
+		}
+		revision, err = extractValue(revInstr)
+		if err != nil {
+			return Version{}, err
+		}
+		patch, err = extractValue(patchInstr)
+		if err != nil {
+			return Version{}, err
+		}
+	} else if instrs[4].Model.Name == "pushstring" {
 		majMinRelInstr := instrs[4]
 		revInstr := instrs[7]
 		patchInstr := instrs[8]
